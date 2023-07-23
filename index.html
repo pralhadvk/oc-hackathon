@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat Windows</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      overflow: hidden; /* Hide vertical scrollbar */
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 40px); /* Reduce 40px to make space for the button at the bottom */
+      overflow-x: auto; /* Enable horizontal scrolling when chat windows exceed the screen width */
+    }
+
+    .chat-windows {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto; /* Enable horizontal scrolling when chat windows exceed the container width */
+    }
+
+    .chat-window {
+      min-width: 300px; /* Set minimum width for each chat window */
+      height: 100%;
+      border: 1px solid #ccc;
+      overflow-y: scroll;
+      margin-right: 5px; /* Adjust this value to set the space between chat windows */
+    }
+
+    .chat-input {
+      width: 100%;
+      padding: 5px;
+    }
+
+    .add-button {
+      margin-top: 10px;
+      align-self: flex-end; /* Position the button at the bottom of the container */
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-windows">
+      <div class="chat-window" id="chatWindow1">
+        <div class="chat-content" id="chatContent1">
+          <p>Welcome to Chat Window 1</p>
+        </div>
+        <input class="chat-input" type="text" placeholder="Type a message...">
+      </div>
+
+      <div class="chat-window" id="chatWindow2">
+        <div class="chat-content" id="chatContent2">
+          <p>Welcome to Chat Window 2</p>
+        </div>
+        <input class="chat-input" type="text" placeholder="Type a message...">
+      </div>
+    </div>
+  </div>
+
+  <button class="add-button" onclick="addChatWindow()">Add Chat Window</button>
+
+  <script>
+    let chatWindowCounter = 2;
+
+    function addChatWindow() {
+      chatWindowCounter++;
+
+      const chatWindows = document.querySelector('.chat-windows');
+      const newChatWindow = document.createElement('div');
+      newChatWindow.className = 'chat-window';
+      newChatWindow.id = `chatWindow${chatWindowCounter}`;
+      newChatWindow.innerHTML = `
+        <div class="chat-content" id="chatContent${chatWindowCounter}">
+          <p>Welcome to Chat Window ${chatWindowCounter}</p>
+        </div>
+        <input class="chat-input" type="text" placeholder="Type a message...">
+      `;
+
+      chatWindows.appendChild(newChatWindow);
+    }
+  </script>
+</body>
+</html>
