@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Application</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            display: flex;
+            width: 100vw; /* Make the chat container span the entire screen */
+        }
+
+        .chat-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            flex: 1; /* Each chat box will take equal space */
+            height: 400px;
+            overflow-y: scroll;
+            margin-right: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .chat-input {
+            display: flex;
+            margin-top: auto;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 5px;
+        }
+
+        .chat-input button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox1">
+            <h2 class="chat-title">Using model: gpt2</h2>
+            <!-- Chat window 1 content will be added here -->
+            <div id="chatMessages1"></div>
+            <div class="chat-input">
+                <input type="text" id="chatInput1" placeholder="Type your message..."/>
+                <button onclick="sendMessage(1)">Send</button>
+            </div>
+        </div>
+        <div class="chat-box" id="chatBox2">
+            <h2 class="chat-title">Using model: gpt-neo</h2>
+            <!-- Chat window 2 content will be added here -->
+            <div id="chatMessages2"></div>
+            <div class="chat-input">
+                <input type="text" id="chatInput2" placeholder="Type your message..."/>
+                <button onclick="sendMessage(2)">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage(chatNumber) {
+            var chatInput = document.getElementById(`chatInput${chatNumber}`);
+            var message = chatInput.value.trim();
+            if (message === "") {
+                alert("Message cannot be empty.");
+                return;
+            }
+            const data = {
+                "prompt": message
+            };
+
+            // URL of the route where you want to send the POST request
+            console.log(chatNumber)
+            let url = ""
+            if(chatNumber == 1)
+                {   
+                    console.log("in chat 1");
+                    url = "http://localhost:8000/generate/1";
+                }
+            else
+                {   
+                    console.log("in chat 2");
+                    url = "http://localhost:8000/generate/2";}
+
+            // Options for the fetch() function
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            };
+            var chatMessages = document.getElementById(`chatMessages${chatNumber}`);
+            chatMessages.innerHTML += `<div>User ${chatNumber}: ${message}</div>`;
+            // Send the POST request
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data => {console.log(data)
+                    chatMessages.innerHTML += `<div>AI response ${chatNumber}:${data.generated_text}</div>`})
+                .catch(error => console.error("Error:", error));
+            // You can send the message to the server or perform any other actions here
+            // For this example, we'll simply add the message to the corresponding chat box
+
+            // Clear the input field
+            chatInput.value = "";
+        }
+    </script>
+</body>
+</html>
